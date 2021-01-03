@@ -31,11 +31,13 @@
 </head>
 
 <body>
-    <button type="button" class="btn btn-success">Primary</button>
+    <div id="divTest"></div>
+    <button id="getRepos" type="button" class="btn btn-success">GET REPOS</button>
+    <button id="getIssues" type="button" class="btn btn-success">GET ISSUES</button>
     <form id="getthingy" class="form-horizontal" onsubmit="console.log('submit')">
         <div class="field">
             <textarea rows="2" id="commentTextareaId" placeholder="Input a GitHub Username" required></textarea>
-            <button class="btn btn-primary" type=submit> Create comment</button>
+            <button class="btn btn-primary" type="submit"> Create comment</button>
         </div>
     </form>
     <div id="histogram_div"></div>
