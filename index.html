@@ -6,9 +6,15 @@
     <title>Visualizer</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-
+    
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <link 
+        rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+        crossorigin="anonymous"
+    >
     <link rel="stylesheet" href="index.css" />
 
     <!-- Needed to be able to use multiple versions of D3.js -->
@@ -25,10 +31,11 @@
 </head>
 
 <body>
-    <form .form-horizontal ##{commentFormId}>
-        <div .field>
-            <textarea rows="2" ##{commentTextareaId} placeholder="Input a GitHub Username" required></textarea>
-            <button .btn.btn-primary type=submit> Create comment</button>
+    <button type="button" class="btn btn-success">Primary</button>
+    <form id="getthingy" class="form-horizontal" onsubmit="console.log('submit')">
+        <div class="field">
+            <textarea rows="2" id="commentTextareaId" placeholder="Input a GitHub Username" required></textarea>
+            <button class="btn btn-primary" type=submit> Create comment</button>
         </div>
     </form>
     <div id="histogram_div"></div>
