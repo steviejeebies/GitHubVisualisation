@@ -1,1 +1,6 @@
-console.log("log1")
+drawHistogram({a:"b"})
+
+drawPieChart({a:"b"})
+
+
+
