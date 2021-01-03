@@ -51,10 +51,29 @@ async function getCommits() {
     const authorTest = "torvalds"
     const passURL = url.concat(`search/commits?q=a repo:freecodecamp/freecodecamp author-date:2020-01-01..2020-12-31`)
 
-    const responce = await fetch(passURL, {"headers": header_clpr, "method": "GET"})
-    const result = await responce.json()
-    
-    console.log(result)
+    pagination (passURL, {"headers": header_clpr, "method": "GET"})
+}
+
+async function pagination (passURL, headerMethodObject) {
+    let urls = [{title:' rel="next"', url: passURL}]
+    let returnArray = []
+
+    while (urls[0].title === ' rel="next"') {
+        let responce = await fetch(urls[0].url, headerMethodObject)
+        let result = await responce.json()
+        if(result.items === undefined) break;
+        returnArray.push(...result.items)
+        let link = responce.headers.get("link")
+        let links = link.split(",")
+        urls = links.map(a=> {
+            return {
+                url: a.split(";")[0].replace(">","").replace("<",""),
+                title:a.split(";")[1]
+            }
+        })
+        console.log("wahoo")
+    }
+    console.log(returnArray)
 }
 
 function preventDefault(event) { 
