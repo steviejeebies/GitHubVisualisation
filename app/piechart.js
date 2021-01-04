@@ -1,13 +1,16 @@
+// http://bl.ocks.org/dbuezas/9306799
+// dataJSON must have structure [{label:"label", value:value}]
+
 function drawPieChart(dataJSON) {
-	var svgPie = d3v3.select("#piechart_div")
+	var pieSvg = d3v3.select("#piechart_div")
 		.append("svg")
 		.append("g")
 
-	svgPie.append("g")
+	pieSvg.append("g")
 		.attr("class", "slices");
-	svgPie.append("g")
+	pieSvg.append("g")
 		.attr("class", "labels");
-	svgPie.append("g")
+	pieSvg.append("g")
 		.attr("class", "lines");
 
 	var pie_width = 960,
@@ -16,7 +19,7 @@ function drawPieChart(dataJSON) {
 
 	var pie = d3v3.layout.pie()
 		.sort(null)
-		.value(function(d) {
+		.value(function (d) {
 			return d.value;
 		});
 
@@ -28,117 +31,183 @@ function drawPieChart(dataJSON) {
 		.innerRadius(pie_radius * 0.9)
 		.outerRadius(pie_radius * 0.9);
 
-	svgPie.attr("transform", "translate(" + pie_width / 2 + "," + pie_height / 2 + ")");
+	pieSvg.attr("transform", "translate(" + pie_width / 2 + "," + pie_height / 2 + ")");
 
-	var key = function(d){ return d.data.label; };
+	var key = function (d) { return d.data.label; };
 
-	var color = d3v3.scale.ordinal()
-		.domain(["Lorem ipsum", "dolor sit", "amet", "consectetur", "adipisicing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt"])
-		.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+	let labelNames = dataJSON.map(a => a.label);
 
-	function randomData (){
-		var labels = color.domain();
-		return labels.map(function(label){
-			return { label: label, value: Math.random() }
+	var color = d3v3.scale.category20()
+		.domain(labelNames)
+	//.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+	function generateData(newData) {
+		return newData.sort(function (a, b) {
+			return d3v3.ascending(a.label, b.label);
 		});
 	}
 
-	change(randomData());
-
-	d3v3.select(".randomize")
-		.on("click", function(){
-			change(randomData());
+	function randomData() {
+		var labels = color.domain();
+		return labels.map(function (label) {
+			return { label: label, value: Math.random() }
+		}).filter(function () {
+			return Math.random() > .5;
+		}).sort(function (a, b) {
+			return d3v3.ascending(a.label, b.label);
 		});
+	}
 
+	d3v3.selectAll("input[name='pie_chart_radio']").on("change", function(){
+		change(generateData(this.value));
+	});
+
+	change(generateData(dataJSON));	// initialize with first data
+
+	function mergeWithFirstEqualZero(first, second) {
+		var secondSet = d3v3.set(); second.forEach(function (d) { secondSet.add(d.label); });
+
+		var onlyFirst = first
+			.filter(function (d) { return !secondSet.has(d.label) })
+			.map(function (d) { return { label: d.label, value: 0 }; });
+		return d3v3.merge([second, onlyFirst])
+			.sort(function (a, b) {
+				return d3v3.ascending(a.label, b.label);
+			});
+	}
 
 	function change(data) {
+		var duration = 700;
+		var data0 = pieSvg.select(".slices").selectAll("path.slice")
+			.data().map(function (d) { return d.data });
+		if (data0.length == 0) data0 = data;
+		var was = mergeWithFirstEqualZero(data, data0);
+		var is = mergeWithFirstEqualZero(data0, data);
 
-		/* //////- PIE SLICES //////-*/
-		var slice = svgPie.select(".slices").selectAll("path.slice")
-			.data(pie(data), key);
+		/* ------- SLICE ARCS -------*/
+
+		var slice = pieSvg.select(".slices").selectAll("path.slice")
+			.data(pie(was), key);
 
 		slice.enter()
 			.insert("path")
-			.style("fill", function(d) { return color(d.data.label); })
-			.attr("class", "slice");
+			.attr("class", "slice")
+			.style("fill", function (d) { return color(d.data.label); })
+			.each(function (d) {
+				this._current = d;
+			});
 
-		slice		
-			.transition().duration(1000)
-			.attrTween("d", function(d) {
-				this._current = this._current || d;
+		slice = pieSvg.select(".slices").selectAll("path.slice")
+			.data(pie(is), key);
+
+		slice
+			.transition().duration(duration)
+			.attrTween("d", function (d) {
 				var interpolate = d3v3.interpolate(this._current, d);
-				this._current = interpolate(0);
-				return function(t) {
-					return arc(interpolate(t));
+				var _this = this;
+				return function (t) {
+					_this._current = interpolate(t);
+					return arc(_this._current);
 				};
-			})
+			});
 
-		slice.exit()
+		slice = pieSvg.select(".slices").selectAll("path.slice")
+			.data(pie(data), key);
+
+		slice
+			.exit().transition().delay(duration).duration(0)
 			.remove();
 
-		/* //////- TEXT LABELS //////-*/
+		/* ------- TEXT LABELS -------*/
 
-		var text = svgPie.select(".labels").selectAll("text")
-			.data(pie(data), key);
+		var text = pieSvg.select(".labels").selectAll("text")
+			.data(pie(was), key);
 
 		text.enter()
 			.append("text")
 			.attr("dy", ".35em")
-			.text(function(d) {
+			.style("opacity", 0)
+			.text(function (d) {
 				return d.data.label;
+			})
+			.each(function (d) {
+				this._current = d;
 			});
-		
-		function midAngle(d){
-			return d.startAngle + (d.endAngle - d.startAngle)/2;
+
+		function midAngle(d) {
+			return d.startAngle + (d.endAngle - d.startAngle) / 2;
 		}
 
-		text.transition().duration(1000)
-			.attrTween("transform", function(d) {
-				this._current = this._current || d;
+		text = pieSvg.select(".labels").selectAll("text")
+			.data(pie(is), key);
+
+		text.transition().duration(duration)
+			.style("opacity", function (d) {
+				return d.data.value == 0 ? 0 : 1;
+			})
+			.attrTween("transform", function (d) {
 				var interpolate = d3v3.interpolate(this._current, d);
-				this._current = interpolate(0);
-				return function(t) {
+				var _this = this;
+				return function (t) {
 					var d2 = interpolate(t);
+					_this._current = d2;
 					var pos = outerArc.centroid(d2);
 					pos[0] = pie_radius * (midAngle(d2) < Math.PI ? 1 : -1);
-					return "translate("+ pos +")";
+					return "translate(" + pos + ")";
 				};
 			})
-			.styleTween("text-anchor", function(d){
-				this._current = this._current || d;
+			.styleTween("text-anchor", function (d) {
 				var interpolate = d3v3.interpolate(this._current, d);
-				this._current = interpolate(0);
-				return function(t) {
+				return function (t) {
 					var d2 = interpolate(t);
-					return midAngle(d2) < Math.PI ? "start":"end";
+					return midAngle(d2) < Math.PI ? "start" : "end";
 				};
 			});
 
-		text.exit()
+		text = pieSvg.select(".labels").selectAll("text")
+			.data(pie(data), key);
+
+		text
+			.exit().transition().delay(duration)
 			.remove();
 
-		/* //////- SLICE TO TEXT POLYLINES //////-*/
+		/* ------- SLICE TO TEXT POLYLINES -------*/
 
-		var polyline = svgPie.select(".lines").selectAll("polyline")
-			.data(pie(data), key);
-		
+		var polyline = pieSvg.select(".lines").selectAll("polyline")
+			.data(pie(was), key);
+
 		polyline.enter()
-			.append("polyline");
+			.append("polyline")
+			.style("opacity", 0)
+			.each(function (d) {
+				this._current = d;
+			});
 
-		polyline.transition().duration(1000)
-			.attrTween("points", function(d){
-				this._current = this._current || d;
+		polyline = pieSvg.select(".lines").selectAll("polyline")
+			.data(pie(is), key);
+
+		polyline.transition().duration(duration)
+			.style("opacity", function (d) {
+				return d.data.value == 0 ? 0 : .5;
+			})
+			.attrTween("points", function (d) {
+				this._current = this._current;
 				var interpolate = d3v3.interpolate(this._current, d);
-				this._current = interpolate(0);
-				return function(t) {
+				var _this = this;
+				return function (t) {
 					var d2 = interpolate(t);
+					_this._current = d2;
 					var pos = outerArc.centroid(d2);
 					pos[0] = pie_radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
 					return [arc.centroid(d2), outerArc.centroid(d2), pos];
-				};			
+				};
 			});
-		
-		polyline.exit()
+
+		polyline = pieSvg.select(".lines").selectAll("polyline")
+			.data(pie(data), key);
+
+		polyline
+			.exit().transition().delay(duration)
 			.remove();
 	};
 }

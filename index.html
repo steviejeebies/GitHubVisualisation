@@ -9,15 +9,11 @@
 
     <!-- REQUIRED FOR AUTHENTIFICATION, IGNORED BY GITIGNORE -->
     <script src="token.js"></script>
-    
+
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <link 
-        rel="stylesheet" 
-        href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
-        crossorigin="anonymous"
-    >
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css" />
 
     <!-- Needed to be able to use multiple versions of D3.js -->
@@ -35,23 +31,42 @@
 
 <body>
     <div id="divTest"></div>
-    <button id="getRepos" type="button" class="btn btn-success">GET REPOS</button>
+    <button id="changeValues" type="button" class="btn btn-success">CHANGEPIECHARTVALUES</button>
+    <!-- <button id="getRepos" type="button" class="btn btn-success">GET REPOS</button>
     <button id="getIssues" type="button" class="btn btn-success">GET ISSUES</button>
-    <button id="getCommits" type="button" class="btn btn-success">GET COMMITS</button>
-    <form id="getthingy" class="form-horizontal" onsubmit="console.log('submit')">
+    <button id="getCommits" type="button" class="btn btn-success">GET COMMITS</button> -->
+    <form id="inputUsername" class="form-horizontal">
         <div class="field">
-            <textarea rows="2" id="commentTextareaId" placeholder="Input a GitHub Username" required></textarea>
-            <button class="btn btn-primary" type="submit"> Create comment</button>
+            <textarea rows="2" id="usernameInput" placeholder="Input a GitHub Username" required></textarea>
+            <button class="btn btn-primary" type="submit">GET</button>
         </div>
     </form>
-    <div id="histogram_div"></div>
-    <div id="barchart_container">
-        <div id="barchart_div"></div>
-    </div>
-    <div id="piechart_container">
-        <button class="randomize"> randomize</button>
-        <div id="piechart_div">
+    <div id="userInfo">
+        <div>
+            <div id="histogram_div"></div>
         </div>
+        <div id="barchart_container">
+            <div id="barchart_div"></div>
+        </div>
+        <div id="piechart_container">
+            <div id="pc_radio_container">
+                <p>Select:</p>
+                <div>
+                    <input type="radio" id="size" name="pie_chart_radio" value=`${user_repos_by_size}` checked="checked">
+                    <label for="email">Size</label>
+
+                    <input type="radio" id="score" name="pie_chart_radio" value=`${user_repos_by_score}`>
+                    <label for="phone">Score</label>
+                </div>
+                <button class="randomize"> randomize</button>
+                <div id="piechart_div"></div>
+            </div>
+        </div>
+    </div>
+    <div id="repoInfo"></div>
+    <div id="statsInfo"></div>
+
+
 </body>
 
 </html>
