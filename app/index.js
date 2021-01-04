@@ -18,6 +18,7 @@ const url = "https://api.github.com/"
 async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault(); 
+    d3v4.selectAll("svg").remove();     // for clearing all the currently on-screen graphs
 
     var username = document.getElementById("usernameInput").value;
     
@@ -34,15 +35,15 @@ async function usernameInput(event) {
     // so now we're making an array for every type of pie chart there is for this call, with an equivalent
     // radio button for it in the HTML
 
+    user_repos_by_index = []        // all of the values for this will just be 1, so that the pie chart starts out with each slice equal
     user_repos_by_size = []
-    user_repos_by_index = []        // all of the values for this will just be 1, so that the pie chart starts out with each slice equal size
 
     result.items.forEach(i => {
-        user_repos_by_size.push({label: i.full_name, value: i.size})
-        user_repos_by_score.push({label: i.full_name, value: i.score})
+        user_repos_by_index.push({label: i.name, value: 1})
+        user_repos_by_size.push({label: i.name, value: i.size})
     })
 
-    drawPieChart(user_repos_by_size)
+    drawPieChart(user_repos_by_index)
 }
 
 // WILL BORROW FROM THE BELOW COMMENTED FUNCTIONS AS NEEDED

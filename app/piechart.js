@@ -2,6 +2,7 @@
 // dataJSON must have structure [{label:"label", value:value}]
 
 function drawPieChart(dataJSON) {
+	document.getElementById("piechart_div").innerHTML = null;
 	var pieSvg = d3v3.select("#piechart_div")
 		.append("svg")
 		.append("g")
@@ -56,10 +57,10 @@ function drawPieChart(dataJSON) {
 
 	function getRelevantJSON(inputString) {
 		switch(inputString) {
+			case "user_repos_by_index":
+			  return user_repos_by_index;
 			case "user_repos_by_size":
 			  return user_repos_by_size;
-			case "user_repos_by_score":
-			  return user_repos_by_score;
 			default:
 			  return []
 		} 
