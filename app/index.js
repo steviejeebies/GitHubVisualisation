@@ -8,7 +8,7 @@ const header = {
 }
 
 // cloak-preview header, required for search/commits
-const header_clpr = {
+const header_commit = {
     "Accept": "application/vnd.github.cloak-preview+json, application/vnd.github.v3+json",
     "Authorization" : `Token ${AUTHTOKEN}`
 }
@@ -23,7 +23,7 @@ async function usernameInput(event) {
 
     d3v4.selectAll("svg").remove();     // for clearing all the currently on-screen graphs
 
-    var username = document.getElementById("usernameInput").value;
+    let username = document.getElementById("usernameInput").value;
     
     // (Browsers that enforce the "required" attribute on the textarea won't see this alert)
     if (!username) {
@@ -32,8 +32,8 @@ async function usernameInput(event) {
     }
 
     // first we want to get the JSON for a particular repo
-    const responce = await fetch(url.concat(`search/repositories?q=user:${username}`), {"method" : "GET", "headers": header})
-    const result = await responce.json()
+    let responce = await fetch(url.concat(`search/repositories?q=user:${username}`), {"method" : "GET", "headers": header})
+    let result = await responce.json()
     
     // so now we're making an array for every type of pie chart there is for this call, with an equivalent
     // radio button for it in the HTML
@@ -47,6 +47,27 @@ async function usernameInput(event) {
     })
 
     drawPieChart(user_repos_by_index)
+
+    // Now we want to get all the commits made by the user (accross all repos they've committed to, not
+    // just their own). I'm only interested in commits made in the last year
+
+    let today = new Date();
+    today.setFullYear(today.getFullYear() - 1 );
+    let lastYear = today.toISOString().slice(0, 10);
+
+    let callURL = `search/commits?q=user:${username} author-date:>${lastYear}`
+
+    result = await paginationAllOneArray(url.concat(callURL), {"method" : "GET", "headers": header_commit})
+
+    // let commitInfoForMultiLine = []
+    // result.forEach(    
+    //     result.items.forEach(i => {
+    //         obj.push({})
+    //     }))
+
+    // console.log(result);
+    // get the full_name value of each element in the result, print it to console
+    //result.items.forEach(i=>console.log(i.full_name))
 }
 
 // WILL BORROW FROM THE BELOW COMMENTED FUNCTIONS AS NEEDED
@@ -55,19 +76,19 @@ async function usernameInput(event) {
 
 // document.getElementById("getRepos").addEventListener('click', getRepos);
 
-// async function getPrivateRepos() {
-//     const responce = await fetch(url.concat("search/repositories?q=user:steviejeebies"), {"method" : "GET", "headers": header})
-//     const result = await responce.json()
+async function getPrivateRepos() {
+    const responce = await fetch(url.concat("search/repositories?q=  user:steviejeebies"), {"method" : "GET", "headers": header})
+    const result = await responce.json()
     
-//     // get the full_name value of each element in the result, print it to console
-//     //result.items.forEach(i=>console.log(i.full_name))
+    // get the full_name value of each element in the result, print it to console
+    //result.items.forEach(i=>console.log(i.full_name))
 
-//     result.items.forEach(i => {
-//         const pElement = document.createElement("p");
-//         pElement.textContent = i.name;
-//         divTest.appendChild(pElement)
-//     })
-// }
+    result.items.forEach(i => {
+        const pElement = document.createElement("p");
+        pElement.textContent = i.name;
+        divTest.appendChild(pElement)
+    })
+}
 
 // getPrivateRepos()
 
@@ -92,38 +113,38 @@ async function usernameInput(event) {
 //     const responce = await fetch(url.concat(`search/issues?q=author:${authorTest}`))
 //     const result = await responce.json()
     
-//     var obj = []
-//     result.items.forEach(i => {
-//         obj.push(i.state)
-//     })
+    // var obj = []
+    // result.items.forEach(i => {
+    //     obj.push(i.state)
+    // })
 // }
 
 // document.getElementById("getCommits").addEventListener('click', getCommits);
 
-// async function paginationAllOneArray (passURL, headerMethodObject) {
-//     let nextURL = passURL
-//     let returnArray = []
+async function paginationAllOneArray (passURL, headerMethodObject) {
+    let nextURL = passURL.concat("&per_page=150")
+    let returnArray = []
 
-//     do {
-//         let responce = await fetch(nextURL, headerMethodObject)
-//         let result = await responce.json()
-//         if(result.items === undefined) break;
-//         returnArray.push(...result.items)
-//         let link = responce.headers.get("link")
-//         let links = link.split(",")
-//         urls = links.map(a=> {
-//             return {
-//                 url: a.split(";")[0].replace(">","").replace("<",""),
-//                 title:a.split(";")[1]
-//             }
-//         })
-//         urlElement = urls.find(item => {
-//             return item.title === ' rel="next"'
-//          })
-//         if(urlElement) nextURL = urlElement.url
-//     } while(urlElement)
-//     return returnArray
-// }
+    do {
+        let responce = await fetch(nextURL, headerMethodObject)
+        let result = await responce.json()
+        if(result.items === undefined) break;
+        returnArray.push(...result.items)
+        let link = responce.headers.get("link")
+        let links = link.split(",")
+        urls = links.map(a=> {
+            return {
+                url: a.split(";")[0].replace(">","").replace("<",""),
+                title:a.split(";")[1]
+            }
+        })
+        urlElement = urls.find(item => {
+            return item.title === ' rel="next"'
+         })
+        if(urlElement) nextURL = urlElement.url
+    } while(urlElement)
+    return returnArray
+}
 
 function getRandomColor() {
     Math.floor(Math.random()*16777215).toString(16);
