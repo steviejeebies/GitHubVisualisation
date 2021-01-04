@@ -47,19 +47,12 @@ async function getIssues() {
 
 document.getElementById("getCommits").addEventListener('click', getCommits);
 
-async function getCommits() {
-    const authorTest = "torvalds"
-    const passURL = url.concat(`search/commits?q=a repo:freecodecamp/freecodecamp author-date:2020-01-01..2020-12-31`)
-
-    pagination (passURL, {"headers": header_clpr, "method": "GET"})
-}
-
-async function pagination (passURL, headerMethodObject) {
-    let urls = [{title:' rel="next"', url: passURL}]
+async function paginationAllOneArray (passURL, headerMethodObject) {
+    let nextURL = passURL
     let returnArray = []
 
-    while (urls[0].title === ' rel="next"') {
-        let responce = await fetch(urls[0].url, headerMethodObject)
+    do {
+        let responce = await fetch(nextURL, headerMethodObject)
         let result = await responce.json()
         if(result.items === undefined) break;
         returnArray.push(...result.items)
@@ -71,9 +64,12 @@ async function pagination (passURL, headerMethodObject) {
                 title:a.split(";")[1]
             }
         })
-        console.log("wahoo")
-    }
-    console.log(returnArray)
+        urlElement = urls.find(item => {
+            return item.title === ' rel="next"'
+         })
+        if(urlElement) nextURL = urlElement.url
+    } while(urlElement)
+    return returnArray
 }
 
 function preventDefault(event) { 
