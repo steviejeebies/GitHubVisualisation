@@ -18,6 +18,7 @@ const url = "https://api.github.com/"
 async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault(); 
+
     d3v4.selectAll("svg").remove();     // for clearing all the currently on-screen graphs
 
     var username = document.getElementById("usernameInput").value;
@@ -52,19 +53,19 @@ async function usernameInput(event) {
 
 // document.getElementById("getRepos").addEventListener('click', getRepos);
 
-async function getPrivateRepos() {
-    const responce = await fetch(url.concat("search/repositories?q=user:steviejeebies"), {"method" : "GET", "headers": header})
-    const result = await responce.json()
+// async function getPrivateRepos() {
+//     const responce = await fetch(url.concat("search/repositories?q=user:steviejeebies"), {"method" : "GET", "headers": header})
+//     const result = await responce.json()
     
-    // get the full_name value of each element in the result, print it to console
-    //result.items.forEach(i=>console.log(i.full_name))
+//     // get the full_name value of each element in the result, print it to console
+//     //result.items.forEach(i=>console.log(i.full_name))
 
-    result.items.forEach(i => {
-        const pElement = document.createElement("p");
-        pElement.textContent = i.name;
-        divTest.appendChild(pElement)
-    })
-}
+//     result.items.forEach(i => {
+//         const pElement = document.createElement("p");
+//         pElement.textContent = i.name;
+//         divTest.appendChild(pElement)
+//     })
+// }
 
 // getPrivateRepos()
 
@@ -121,5 +122,12 @@ async function getPrivateRepos() {
 //     } while(urlElement)
 //     return returnArray
 // }
+
+function getRandomColor() {
+    Math.floor(Math.random()*16777215).toString(16);
+    document.body.style.backgroundColor = "#" + randomColor;
+    color.innerHTML = "#" + randomColor;
+    }
+}
 
 document.getElementById("button").addEventListener('click', usernameInput);
