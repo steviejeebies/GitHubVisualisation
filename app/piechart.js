@@ -35,6 +35,13 @@ function drawPieChart(dataJSON) {
 
 	var key = function (d) { return d.data.label; };
 
+	// For the radio buttons
+
+	d3v3.selectAll("input[name='pie_chart_radio']").on("change", function(){
+		var arr = getRelevantJSON(this.value)
+		change(generateData(arr));
+	});
+
 	let labelNames = dataJSON.map(a => a.label);
 
 	var color = d3v3.scale.category20()
@@ -47,20 +54,16 @@ function drawPieChart(dataJSON) {
 		});
 	}
 
-	function randomData() {
-		var labels = color.domain();
-		return labels.map(function (label) {
-			return { label: label, value: Math.random() }
-		}).filter(function () {
-			return Math.random() > .5;
-		}).sort(function (a, b) {
-			return d3v3.ascending(a.label, b.label);
-		});
+	function getRelevantJSON(inputString) {
+		switch(inputString) {
+			case "user_repos_by_size":
+			  return user_repos_by_size;
+			case "user_repos_by_score":
+			  return user_repos_by_score;
+			default:
+			  return []
+		} 
 	}
-
-	d3v3.selectAll("input[name='pie_chart_radio']").on("change", function(){
-		change(generateData(this.value));
-	});
 
 	change(generateData(dataJSON));	// initialize with first data
 

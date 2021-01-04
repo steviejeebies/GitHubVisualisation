@@ -38,7 +38,7 @@
     <form id="inputUsername" class="form-horizontal">
         <div class="field">
             <textarea rows="2" id="usernameInput" placeholder="Input a GitHub Username" required></textarea>
-            <button class="btn btn-primary" type="submit">GET</button>
+            <button id="button" class="btn btn-primary" type="click">GET</button>
         </div>
     </form>
     <div id="userInfo">
@@ -52,10 +52,10 @@
             <div id="pc_radio_container">
                 <p>Select:</p>
                 <div>
-                    <input type="radio" id="size" name="pie_chart_radio" value=`${user_repos_by_size}` checked="checked">
+                    <input type="radio" id="size" name="pie_chart_radio" value="user_repos_by_size" checked="checked">
                     <label for="email">Size</label>
 
-                    <input type="radio" id="score" name="pie_chart_radio" value=`${user_repos_by_score}`>
+                    <input type="radio" id="score" name="pie_chart_radio" value="user_repos_by_score">
                     <label for="phone">Score</label>
                 </div>
                 <button class="randomize"> randomize</button>

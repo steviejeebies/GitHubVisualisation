@@ -1,7 +1,5 @@
 drawHistogram({a:"b"})
 
-drawPieChart()
-
 // https://github.com/search -- test your results against this\
 
 const header = {
@@ -17,17 +15,17 @@ const header_clpr = {
 
 const url = "https://api.github.com/"
 
-function usernameInput(event) {
+async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault(); 
+
+    var username = document.getElementById("usernameInput").value;
     
     // (Browsers that enforce the "required" attribute on the textarea won't see this alert)
-    if (!message) {
+    if (!username) {
       alert("Please fill out the comment form first.");
       return;
     }
-    
-    var username = document.getElementById("usernameInput").value;
 
     // first we want to get the JSON for a particular repo
     const responce = await fetch(url.concat(`search/repositories?q=user:${username}`), {"method" : "GET", "headers": header})
@@ -37,14 +35,14 @@ function usernameInput(event) {
     // radio button for it in the HTML
 
     user_repos_by_size = []
-    user_repos_by_score = []
+    user_repos_by_index = []        // all of the values for this will just be 1, so that the pie chart starts out with each slice equal size
 
     result.items.forEach(i => {
         user_repos_by_size.push({label: i.full_name, value: i.size})
         user_repos_by_score.push({label: i.full_name, value: i.score})
     })
 
-    drawPieChart()
+    drawPieChart(user_repos_by_size)
 }
 
 // WILL BORROW FROM THE BELOW COMMENTED FUNCTIONS AS NEEDED
@@ -123,10 +121,4 @@ async function getPrivateRepos() {
 //     return returnArray
 // }
 
-
-
-function preventDefault(event) { 
-    
-} 
-
-document.getElementById("usernameInput").addEventListener('submit', usernameInput);
+document.getElementById("button").addEventListener('click', usernameInput);
