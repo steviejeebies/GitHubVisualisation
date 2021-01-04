@@ -5,18 +5,36 @@ drawPieChart({a:"b"})
 // https://github.com/search -- test your results against this\
 
 const header = {
-    "Accept": "application/vnd.github.v3+json"
+    "Accept": "application/vnd.github.v3+json",
+    "Authorization" : `Token ${AUTHTOKEN}`
 }
 
 // cloak-preview header, required for search/commits
 const header_clpr = {
-    "Accept": "application/vnd.github.cloak-preview+json, application/vnd.github.v3+json"
+    "Accept": "application/vnd.github.cloak-preview+json, application/vnd.github.v3+json",
+    "Authorization" : `Token ${AUTHTOKEN}`
 }
 
 const url = "https://api.github.com/"
 const divTest = document.getElementById("divTest")
 
 document.getElementById("getRepos").addEventListener('click', getRepos);
+
+async function getPrivateRepos() {
+    const responce = await fetch(url.concat("search/repositories?q=user:steviejeebies"), {"method" : "GET", "headers": header})
+    const result = await responce.json()
+    
+    // get the full_name value of each element in the result, print it to console
+    //result.items.forEach(i=>console.log(i.full_name))
+
+    result.items.forEach(i => {
+        const pElement = document.createElement("p");
+        pElement.textContent = i.name;
+        divTest.appendChild(pElement)
+    })
+}
+
+getPrivateRepos()
 
 async function getRepos() {
     const responce = await fetch(url.concat("search/repositories?q=stars:>100000"))
