@@ -13,6 +13,8 @@ const header_clpr = {
     "Authorization" : `Token ${AUTHTOKEN}`
 }
 
+drawMultiLineGraph(1);
+
 const url = "https://api.github.com/"
 
 async function usernameInput(event) {
@@ -128,6 +130,5 @@ function getRandomColor() {
     document.body.style.backgroundColor = "#" + randomColor;
     color.innerHTML = "#" + randomColor;
     }
-}
 
 document.getElementById("button").addEventListener('click', usernameInput);

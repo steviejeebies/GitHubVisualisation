@@ -16,6 +16,7 @@ function drawLegend(legendValues, legendDivElementName) {
     // Add one dot in the legend for each name.
     var legendSize = 20;
     legendSVG.selectAll("mydots")
+    .attr("float", "right")
     .data(keys)
     .enter()
     .append("rect")
