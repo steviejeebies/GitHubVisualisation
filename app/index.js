@@ -100,7 +100,7 @@ async function usernameInput(event) {
 
     // Now we have the exact structure we need for the multiLineGraph
 
-    drawMultiLineGraph(mLParameter);
+    drawMultiLineGraph(mLParameter, "Commits");
 
     document.getElementById("multiline_wait").style.visibility = "hidden";
 
@@ -184,16 +184,16 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
     let result = await responce.json()
     console.log(result);
     if (result.items === undefined) return results;                          // if only 1 page, we can return this array
-
+    let numPages = Math.floor(result.total_count / result.items.length)       // floor, as we've already gotten the first page
+    if (numPages <= 1) return result.items;
     returnArray.push(...result.items)
-    let numPages = Math.floor(returnArray.total_count / resultsPerPage)       // floor, as we've already gotten the first page
 
     let allURLs = []
-    for (let i = 2; i <= numPages; i++) {
+    for (let i = 2; i <= numPages + 1; i++) {
         allURLs.push(nextURL.concat("&page=" + i))
     }
 
-    let pagedReturn = await getAllUrls(allURLs);
+    let pagedReturn = await getAllUrls(allURLs, headerMethodObject);
     pagedReturn.forEach(i => { returnArray.push(...i.items) })
 
     //     if (link !== null) {
@@ -213,12 +213,12 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
     return returnArray
 }
 
-async function getAllUrls(urls) {                       // used for Parallelization
+async function getAllUrls(urls, headerMethodObject) {                       // used for Parallelization
     try {
         var data = await Promise.all(
             urls.map(
                 url =>
-                    fetch(url).then(
+                    fetch(url, headerMethodObject).then(
                         (response) => response.json()
                     )));
 
