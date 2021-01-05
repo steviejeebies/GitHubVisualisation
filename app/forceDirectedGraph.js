@@ -1,121 +1,90 @@
-// // get the data
-// Harry,Sally,1.2
-// Harry,Mario,1.3
-// Sarah,Alice,0.2
-// Eveie,Alice,0.5
-// Peter,Alice,1.6
-// Mario,Alice,0.4
-// James,Alice,0.6
-// Harry,Carol,0.7
-// Harry,Nicky,0.8
-// Bobby,Frank,0.8
-// Alice,Mario,0.7
-// Harry,Lynne,0.5
-// Sarah,James,1.9
-// Roger,James,1.1
-// Maddy,James,0.3
-// Sonny,Roger,0.5
-// James,Roger,1.5
-// Alice,Peter,1.1
-// Johan,Peter,1.6
-// Alice,Eveie,0.5
-// Harry,Eveie,0.1
-// Eveie,Harry,2.0
-// Henry,Mikey,0.4
-// Elric,Mikey,0.6
-// James,Sarah,1.5
-// Alice,Sarah,0.6
-// James,Maddy,0.5
-// Peter,Johan,0.7
+// https://bl.ocks.org/heybignick/3faf257bbbbc7743bb72310d03b86ee8
 
-// http://www.d3noob.org/2013/03/d3js-force-directed-graph-example-basic.html
+function drawForceDirectedGraph(linksIn, nodesIn) {
+    let graph = {links: linksIn, nodes: nodesIn}
 
-// data has the structure {source: "", target: "", value: ""}
+    d3v4.select("#force_directed_graph_div")
+        .append("svg")
+        .attr("id", "fdg")
+        .attr("width", 960)
+        .attr("height", 600)
 
-function drawForceDirectedGraph(links) {
+    var svg = d3v4.select("#fdg"),
+        width = +svg.attr("width"),
+        height = +svg.attr("height");
 
-    var nodes = {};
+    var color = d3v4.scaleOrdinal(d3.schemeCategory20);
 
-    // Compute the distinct nodes from the links.
-    links.forEach(function (link) {
-        link.source = nodes[link.source] ||
-            (nodes[link.source] = { name: link.source });
-        link.target = nodes[link.target] ||
-            (nodes[link.target] = { name: link.target });
-        link.value = +link.value;
-    });
+    var simulation = d3v4.forceSimulation()
+        .force("link", d3v4.forceLink().id(function (d) { return d.id; }))
+        .force("charge", d3v4.forceManyBody())
+        .force("center", d3v4.forceCenter(width / 2, height / 2));
 
-    var width = 960,
-        height = 500;
+    var link = svg.append("g")
+        .attr("class", "links")
+        .selectAll("line")
+        .data(graph.links)
+        .enter().append("line")
+        .attr("stroke-width", 2);
 
-    var force = d3v3.layout.force()
-        .nodes(d3v3.values(nodes))
-        .links(links)
-        .size([width, height])
-        .linkDistance(60)
-        .charge(-300)
-        .on("tick", tick)
-        .start();
-
-    var svg = d3v3.select("#force_directed_graph_div").append("svg")
-        .attr("width", width)
-        .attr("height", height);
-
-    // build the arrow.
-    svg.append("svg:defs").selectAll("marker")
-        .data(["end"])
-        .enter().append("svg:marker")
-        .attr("id", String)
-        .attr("viewBox", "0 -5 10 10")
-        .attr("refX", 15)
-        .attr("refY", -1.5)
-        .attr("markerWidth", 6)
-        .attr("markerHeight", 6)
-        .attr("orient", "auto")
-        .append("svg:path")
-        .attr("d", "M0,-5L10,0L0,5");
-
-    // add the links and the arrows
-    var path = svg.append("svg:g").selectAll("path")
-        .data(force.links())
-        .enter().append("svg:path")
-        .attr("class", "link")
-        .attr("marker-end", "url(#end)");
-
-    // define the nodes
-    var node = svg.selectAll(".node")
-        .data(force.nodes())
+    var node = svg.append("g")
+        .attr("class", "nodes")
+        .selectAll("g")
+        .data(graph.nodes)
         .enter().append("g")
-        .attr("class", "node")
-        .call(force.drag);
 
-    // add the nodes
-    node.append("circle")
-        .attr("r", 5);
+        var circles = node.append("circle")
+        .attr("r", 5)
+        .attr("fill", function (d) { return color(d.group); })
+        .call(d3v4.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended));
 
-    // add the text 
-    node.append("text")
-        .attr("x", 12)
-        .attr("dy", ".35em")
-        .text(function (d) { return d.name; });
+    var lables = node.append("text")
+        .text(function (d) {
+            return d.id;
+        })
+        .attr('x', 6)
+        .attr('y', 3);
 
-    // add the curvy lines
-    function tick() {
-        path.attr("d", function (d) {
-            var dx = d.target.x - d.source.x,
-                dy = d.target.y - d.source.y,
-                dr = Math.sqrt(dx * dx + dy * dy);
-            return "M" +
-                d.source.x + "," +
-                d.source.y + "A" +
-                dr + "," + dr + " 0 0,1 " +
-                d.target.x + "," +
-                d.target.y;
-        });
+    node.append("title")
+        .text(function (d) { return d.id; });
+
+    simulation
+        .nodes(graph.nodes)
+        .on("tick", ticked);
+
+    simulation.force("link")
+        .links(graph.links);
+
+    function ticked() {
+        link
+            .attr("x1", function (d) { return d.source.x; })
+            .attr("y1", function (d) { return d.source.y; })
+            .attr("x2", function (d) { return d.target.x; })
+            .attr("y2", function (d) { return d.target.y; });
 
         node
             .attr("transform", function (d) {
                 return "translate(" + d.x + "," + d.y + ")";
-            });
+            })
+    }
+
+    function dragstarted(d) {
+        if (!d3v4.event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3v4.event.x;
+        d.fy = d3v4.event.y;
+    }
+
+    function dragended(d) {
+        if (!d3v4.event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
     }
 }

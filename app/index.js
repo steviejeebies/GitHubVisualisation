@@ -25,7 +25,7 @@ function getDateBeforeAfter(string, num) {                     // date has to be
 async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault();
-    
+
     document.getElementById("userInfo").style.visibility = "visible";
     document.getElementById("multiline_wait").style.visibility = "visible";
     document.getElementById("piechart_radio_buttons").style.visibility = "hidden";
@@ -56,6 +56,35 @@ async function usernameInput(event) {
     document.getElementById("piechart_radio_buttons").style.visibility = "visible";
     drawPieChart(user_repos_by_index)
 
+    let fdgParameter = []
+    let uniqueUsers = new Set()
+
+    await getFollowing(username, 2)
+
+    // recursive function
+    async function getFollowing(userName, level) {
+        if(level === 0) return;
+        uniqueUsers.add(userName);
+        callURL = `users/${userName}/following`;
+        responce = await fetch(url.concat(callURL), { "method": "GET", "headers": header })
+        result = await responce.json()
+        let usersFollowed = []
+        result.forEach(i => {
+            fdgParameter.push({source: userName, target: i.login, value: 1})
+            usersFollowed.push(i.login)
+            uniqueUsers.add(i.login);
+        })
+
+        for(let i = 0; i < usersFollowed.length; i++)
+            await getFollowing(usersFollowed[i], level-1)
+    }
+
+    let nodesParameter = []
+    for (let item of uniqueUsers.values()) nodesParameter.push({id: item, group: 1})
+
+    console.log(fdgParameter)
+    drawForceDirectedGraph(fdgParameter, nodesParameter)
+
     // Now we want to get all the commits made by the user (accross all repos they've committed to, not
     // just their own). I'm only interested in commits made in the last year
 
@@ -63,7 +92,7 @@ async function usernameInput(event) {
     today.setFullYear(today.getFullYear() - 1);
     let lastYear = today.toISOString().slice(0, 10);
 
-    let callURL = `search/commits?q=author:${username} author-date:>${lastYear}`
+    callURL = `search/commits?q=author:${username} author-date:>${lastYear}`
 
     result = await paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header_commit })
 
@@ -108,44 +137,7 @@ async function usernameInput(event) {
     // we find who they are following, and do the same. This is done 3 times only, 
     // because the graph could become massive otherwise. 
 
-    let fdgParameter = []
 
-    await getFollowing(username, 1)
-
-    // recursive function
-    async function getFollowing(userName, level) {
-        if(level === 0) return;
-        callURL = `users/${userName}/following`;
-        responce = await fetch(url.concat(callURL), { "method": "GET", "headers": header })
-        result = await responce.json()
-        let usersFollowed = []
-        result.forEach(i => {
-            fdgParameter.push({source: username, target: i.login, value: 1})
-            usersFollowed.push(i.login)
-        })
-
-        for(let i = 0; i < usersFollowed.length; i++)
-            await getFollowing(usersFollowed[i], level-1)
-    }
-
-    console.log(fdgParameter)
-    drawForceDirectedGraph(fdgParameter)
-
-    // nestedReposFull.items.forEach(i => {
-    //     repoNumCommits.push(d3v3.nest()
-    //                             .key(function(d) { return d.values.commit.date.substring(0, 9); })
-    //                             .entries(outResult))
-    // })
-
-    // let commitInfoForMultiLine = []
-    // result.forEach(    
-    //     result.items.forEach(i => {
-    //         obj.push({})
-    //     }))
-
-    // console.log(result);
-    // get the full_name value of each element in the result, print it to console
-    //result.items.forEach(i=>console.log(i.full_name))
 }
 
 // WILL BORROW FROM THE BELOW COMMENTED FUNCTIONS AS NEEDED

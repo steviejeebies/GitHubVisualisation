@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="index.css" />
 
     <!-- Needed to be able to use multiple versions of D3.js -->
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
         d3v4 = window.d3;
         window.d3 = null;
@@ -59,13 +59,13 @@
             owns the repo or not. Please test out the zooming and scrolling. Please note: If the user has over 1000
             commits in the last year, then this graph will show only the first 1000 received from the API
         </p>
+        <div id="force_directed_graph_container">
+            <div id="force_directed_graph_div"></div>
+        </div>
         <div id="multi_line_graph_container">
             <div id="multi_line_graph_div">
                 <svg id="legend_div" height=300 width=450></svg>
             </div>
-        </div>
-        <div id="force_directed_graph_container">
-            <div id="force_directed_graph_div"></div>
         </div>
     </div>
 
