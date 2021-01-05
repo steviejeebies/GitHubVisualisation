@@ -13,14 +13,14 @@ function drawMultiLineGraph(dataJSON) {
     //                     "2013-06", "2012-08", "2015-09", "2016-07", "2013-03", "2012-09", "2016-05"];
 
     // same variables as above but with full dates
-    var metricCount  = [1, 4, 5, 5, 9, 4, 10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
-    var metricMonths = ["2018-06-03", "2018-06-04", "2018-06-05", "2018-06-06", "2018-06-07", "2018-06-08", "2018-06-09", "2016-04-15", "2016-06-15", "2014-12-15", "2013-07-15", "2017-01-15", "2015-10-15", "2012-12-15", "2013-05-15", "2018-04-15", "2015-06-15", "2017-03-15", "2014-08",
-                        "2017-07-15", "2013-02-15", "2012-07-15", "2016-03-15", "2017-06-15", "2018-07-15", "2014-10-15", "2013-01-15", "2013-10-15", "2017-11-15", "2014-05-15", "2012-11-15", "2015-01-15", "2018-03-15", "2015-12-15", "2015-08-15", "2016-08-15", "2014-11-15", "2014-15",
-                        "2013-06-15", "2012-08-15", "2015-09-15", "2016-07-15", "2013-03-15", "2012-09-15", "2016-05-15"];
-    var metricCount1  = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
-    var metricMonths1 = ["2018-06-15", "2013-04-15", "2015-11-15", "2012-10-15", "2014-09-15", "2014-02-15", "2016-02-15", "2016-04-15", "2016-06-15", "2014-12-15", "2013-07-15", "2017-01-15", "2015-10-15", "2012-12-15", "2013-05-15", "2018-04-15", "2015-06-15", "2017-03-15", "2014-08",
-                        "2017-07-15", "2013-02-15", "2012-07-15", "2016-03-15", "2017-06-15", "2018-07-15", "2014-10-15", "2013-01-15", "2013-10-15", "2017-11-15", "2014-05-15", "2012-11-15", "2015-01-15", "2018-03-15", "2015-12-15", "2015-08-15", "2016-08-15", "2014-11-15", "2014-15",
-                        "2013-06-15", "2012-08-15", "2015-09-15", "2016-07-15", "2013-03-15", "2012-09-15", "2016-05-15"];
+    // var metricCount  = [1, 4, 5, 5, 9, 4, 10, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+    // var metricMonths = ["2018-06-03", "2018-06-04", "2018-06-05", "2018-06-06", "2018-06-07", "2018-06-08", "2018-06-09", "2016-04-15", "2016-06-15", "2014-12-15", "2013-07-15", "2017-01-15", "2015-10-15", "2012-12-15", "2013-05-15", "2018-04-15", "2015-06-15", "2017-03-15", "2014-08",
+    //                     "2017-07-15", "2013-02-15", "2012-07-15", "2016-03-15", "2017-06-15", "2018-07-15", "2014-10-15", "2013-01-15", "2013-10-15", "2017-11-15", "2014-05-15", "2012-11-15", "2015-01-15", "2018-03-15", "2015-12-15", "2015-08-15", "2016-08-15", "2014-11-15", "2014-15",
+    //                     "2013-06-15", "2012-08-15", "2015-09-15", "2016-07-15", "2013-03-15", "2012-09-15", "2016-05-15"];
+    // var metricCount1  = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
+    // var metricMonths1 = ["2018-06-15", "2013-04-15", "2015-11-15", "2012-10-15", "2014-09-15", "2014-02-15", "2016-02-15", "2016-04-15", "2016-06-15", "2014-12-15", "2013-07-15", "2017-01-15", "2015-10-15", "2012-12-15", "2013-05-15", "2018-04-15", "2015-06-15", "2017-03-15", "2014-08",
+    //                     "2017-07-15", "2013-02-15", "2012-07-15", "2016-03-15", "2017-06-15", "2018-07-15", "2014-10-15", "2013-01-15", "2013-10-15", "2017-11-15", "2014-05-15", "2012-11-15", "2015-01-15", "2018-03-15", "2015-12-15", "2015-08-15", "2016-08-15", "2014-11-15", "2014-15",
+    //                     "2013-06-15", "2012-08-15", "2015-09-15", "2016-07-15", "2013-03-15", "2012-09-15", "2016-05-15"];
     var optwidth        = 800;
     var optheight       = 370;
 
@@ -37,27 +37,27 @@ function drawMultiLineGraph(dataJSON) {
     */
 
     // Combine the months and count array to make "data"
-    var dataset = [];
-    for(var i=0; i<metricCount.length; i++){
-        var obj = {count: metricCount[i], month: metricMonths[i], name:"arr1"};
-        var obj1 = {count:metricCount1[i], month: metricMonths1[i], name:"arr2"};
-        dataset.push(obj);
-        dataset.push(obj1);
-    }
+    // var dataset = [];
+    // for(var i=0; i<metricCount.length; i++){
+    //     var obj = {count: metricCount[i], month: metricMonths[i], name:"arr1"};
+    //     var obj1 = {count:metricCount1[i], month: metricMonths1[i], name:"arr2"};
+    //     dataset.push(obj);
+    //     dataset.push(obj1);
+    // }
 
     // format month as a date
-    dataset.forEach(function(d) {
+    dataJSON.forEach(function(d) {
         d.month = d3v3.time.format("%Y-%m-%d").parse(d.month);
     });
 
-    // sort dataset by month
-    dataset.sort(function(x, y){
+    // sort dataJSON by month
+    dataJSON.sort(function(x, y){
     return d3v3.ascending(x.month, y.month);
     });
 
     var nestedArray = d3v3.nest()
     .key(function(d) { return d.name; })
-    .entries(dataset);
+    .entries(dataJSON);
 
     // making an object, which consists of all the repo names, matched to a color. This will be used for both
     // color the lines on the graph, and for the legend.
@@ -66,7 +66,7 @@ function drawMultiLineGraph(dataJSON) {
         legendObj[d.key] = getRandomColor();
     });
 
-    drawLegend(legendObj, "#legend_div")
+    drawLegend(legendObj, "legend_div")
 
 
     /*
@@ -93,8 +93,8 @@ function drawMultiLineGraph(dataJSON) {
     */
 
     // the date range of available data:
-    var dataXrange = d3v3.extent(dataset, function(d) { return d.month; });
-    var dataYrange = [0, d3v3.max(dataset, function(d) { return d.count; })];
+    var dataXrange = d3v3.extent(dataJSON, function(d) { return d.month; });
+    var dataYrange = [0, d3v3.max(dataJSON, function(d) { return d.count; })];
 
     // maximum date range allowed to display
     var mindate = dataXrange[0],  // use the range of the data
@@ -302,7 +302,7 @@ function drawMultiLineGraph(dataJSON) {
     /* === context chart === */
 
     context.append("path")
-        .datum(dataset)
+        .datum(dataJSON)
         .attr("class", "line")
         .attr("d", line_context);
 
@@ -478,35 +478,35 @@ function drawMultiLineGraph(dataJSON) {
         var bisectDate = d3v3.bisector(function(d) { return d.month; }).right;
 
         // get the y value of the line at the left edge of view port:
-        var iL = bisectDate(dataset, xleft);
+        var iL = bisectDate(dataJSON, xleft);
 
-        if (dataset[iL] !== undefined && dataset[iL-1] !== undefined) {
+        if (dataJSON[iL] !== undefined && dataJSON[iL-1] !== undefined) {
 
-            var left_dateBefore = dataset[iL-1].month,
-                left_dateAfter = dataset[iL].month;
+            var left_dateBefore = dataJSON[iL-1].month,
+                left_dateAfter = dataJSON[iL].month;
 
-            var intfun = d3v3.interpolateNumber(dataset[iL-1].count, dataset[iL].count);
+            var intfun = d3v3.interpolateNumber(dataJSON[iL-1].count, dataJSON[iL].count);
             var yleft = intfun((xleft-left_dateBefore)/(left_dateAfter-left_dateBefore));
         } else {
             var yleft = 0;
         }
 
         // get the x value of the line at the right edge of view port:
-        var iR = bisectDate(dataset, xright);
+        var iR = bisectDate(dataJSON, xright);
 
-        if (dataset[iR] !== undefined && dataset[iR-1] !== undefined) {
+        if (dataJSON[iR] !== undefined && dataJSON[iR-1] !== undefined) {
 
-            var right_dateBefore = dataset[iR-1].month,
-                right_dateAfter = dataset[iR].month;
+            var right_dateBefore = dataJSON[iR-1].month,
+                right_dateAfter = dataJSON[iR].month;
 
-            var intfun = d3v3.interpolateNumber(dataset[iR-1].count, dataset[iR].count);
+            var intfun = d3v3.interpolateNumber(dataJSON[iR-1].count, dataJSON[iR].count);
             var yright = intfun((xright-right_dateBefore)/(right_dateAfter-right_dateBefore));
         } else {
             var yright = 0;
         }
 
         // get the y values of all the actual data points that are in view
-        var dataSubset = dataset.filter(function(d){ return d.month >= xleft && d.month <= xright; });
+        var dataSubset = dataJSON.filter(function(d){ return d.month >= xleft && d.month <= xright; });
         var countSubset = [];
         dataSubset.map(function(d) {countSubset.push(d.count);});
 

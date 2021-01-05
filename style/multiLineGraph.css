@@ -27,7 +27,7 @@
 
 #multi_line_graph_div .metric-chart path.line {
 	fill: none;
-	stroke-width: 1.5px;
+	stroke-width: 2.5px;
 	clip-path: url(#clip);
 }
 
