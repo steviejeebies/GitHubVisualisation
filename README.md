@@ -4,7 +4,7 @@ This is my submission for the Visualization Project.
 
 ## Token
 
-The only requirement is to add a `token.js`file in the top level directory (ignored by my .gitignore). In this file, have the following:
+The only requirement is to add a `token.js` file in the top level directory (ignored by my .gitignore). In this file, have the following:
 ```
 const AUTHUSER = "yourUsername"
 const AUTHTOKEN = "yourPersonalAccessToken"
