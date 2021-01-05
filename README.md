@@ -11,7 +11,7 @@ const AUTHTOKEN = "yourPersonalAccessToken"
 ```
 
 ## Docker
-For docker, I used the [httpd](https://hub.docker.com/_/httpd) Docker Image, which serves the root HTML file. *However*, the site can just be run by opening the file `index.html`, nothing else required.
+For docker, I used the [httpd](https://hub.docker.com/_/httpd) Docker Image, which serves the root HTML file. *However*, the site can also just be run by opening the file `index.html`, nothing else required.
 
 ## Graphs
 ### Repo Info
