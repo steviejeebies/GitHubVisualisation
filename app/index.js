@@ -1,7 +1,6 @@
 drawHistogram({ a: "b" })
 
 // https://github.com/search -- test your results against this\
-
 var outResult
 var repoNumCommits
 let mLParameter
@@ -28,7 +27,8 @@ function getDateBeforeAfter(string, num) {                     // date has to be
 async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault();
-
+    
+    document.getElementById("userInfo").style.visibility = "visible";
     document.getElementById("multiline_wait").style.visibility = "visible";
     document.getElementById("piechart_radio_buttons").style.visibility = "hidden";
 
@@ -69,6 +69,8 @@ async function usernameInput(event) {
 
     result = await paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header_commit })
 
+    console.log(result);
+
     // Now that we have all the commits, I want to nest them according to repository. This can easily be done 
     // with a D3 function
 
@@ -103,6 +105,25 @@ async function usernameInput(event) {
     drawMultiLineGraph(mLParameter, "Commits");
 
     document.getElementById("multiline_wait").style.visibility = "hidden";
+
+    // Now we want to draw the force directed graphs for following.
+    // We get the users that a user is following. Create an elements
+    // target: userFollowed source: thisUser for each one. Then for each user we found,
+    // we find who they are following, and do the same. This is done 3 times only, 
+    // because the graph could become massive otherwise. 
+
+    // let fdgParameter = []
+    // callURL = `users/${username}/following`
+
+    // result = paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header })
+    // let usersFollowedURLs = []
+    // result.forEach(i => {
+    //     fdgParameter.push({source: username, target: i.login, value: 1})
+    //     usersFollowedURLs.push(url.concat(`users/${i.login}/following`))
+    // }
+    
+
+
 
     // nestedReposFull.items.forEach(i => {
     //     repoNumCommits.push(d3v3.nest()
@@ -184,8 +205,10 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
     let result = await responce.json()
     console.log(result);
     if (result.items === undefined) return results;                          // if only 1 page, we can return this array
-    let numPages = Math.floor(result.total_count / result.items.length)       // floor, as we've already gotten the first page
+    let numResults = (result.total_count > 999 ? 999 : result.total_count)     // limiting, if we're paging for more than 1000 values then this is too much
+    let numPages = Math.floor(numResults / result.items.length)       // floor, as we've already gotten the first page
     if (numPages <= 1) return result.items;
+    if(result.total_count > 999) numPages = 11;            // limit, if number of pages are greater than 50
     returnArray.push(...result.items)
 
     let allURLs = []
@@ -194,7 +217,7 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
     }
 
     let pagedReturn = await getAllUrls(allURLs, headerMethodObject);
-    pagedReturn.forEach(i => { returnArray.push(...i.items) })
+    if(pagedReturn != null) pagedReturn.forEach(i => { if(i.items != undefined) returnArray.push(...i.items) })
 
     //     if (link !== null) {
     //         let links = link.split(",")                                       // This was my old way of getting paginated results,
@@ -225,9 +248,7 @@ async function getAllUrls(urls, headerMethodObject) {                       // u
         return (data)
 
     } catch (error) {
-        console.log(error)
-
-        throw (error)
+       console.log(error)
     }
 }
 

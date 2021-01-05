@@ -31,24 +31,13 @@
 </head>
 
 <body>
-    <div id="divTest"></div>
-    <button id="changeValues" type="button" class="btn btn-success">CHANGEPIECHARTVALUES</button>
-    <!-- <button id="getRepos" type="button" class="btn btn-success">GET REPOS</button>
-    <button id="getIssues" type="button" class="btn btn-success">GET ISSUES</button>
-    <button id="getCommits" type="button" class="btn btn-success">GET COMMITS</button> -->
     <form id="inputUsername" class="form-horizontal">
         <div class="field">
             <textarea rows="2" id="usernameInput" placeholder="Input a GitHub Username" required></textarea>
             <button id="button" class="btn btn-primary" type="click">GET</button>
         </div>
     </form>
-    <div id="userInfo">
-        <!-- <div>
-            <div id="histogram_div"></div>
-        </div>
-        <div id="barchart_container">
-            <div id="barchart_div"></div>
-        </div> -->
+    <div id="userInfo" style="visibility: hidden">
         <div id="piechart_container">
             <div id="pc_radio_container">
                 <div id="piechart_radio_buttons" style="visibility: hidden">
@@ -65,14 +54,20 @@
             </div>
         </div>
         <h3 id="multiline_wait" style="visibility: hidden">Please wait while we get paginated results...</h3>
+        <p>
+            This below graph shows all the commits made by a user by repo in the last year, regardless of if the user
+            owns the repo or not. Please test out the zooming and scrolling. Please note: If the user has over 1000
+            commits in the last year, then this graph will show only the first 1000 received from the API
+        </p>
         <div id="multi_line_graph_container">
             <div id="multi_line_graph_div">
                 <svg id="legend_div" height=300 width=450></svg>
             </div>
         </div>
+        <div id="force_directed_graph_container">
+            <div id="force_directed_graph_div"></div>
+        </div>
     </div>
-    <div id="repoInfo"></div>
-    <div id="statsInfo"></div>
 
 
 </body>
@@ -85,6 +80,7 @@
 <script src="app/piechart.js"></script>
 <script src="app/legend.js"></script>
 <script src="app/multiLineGraph.js"></script>
+<script src="app/forceDirectedGraph.js"></script>
 
 <!-- main js file -->
 <script src="app/index.js"></script>
