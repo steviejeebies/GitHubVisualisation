@@ -32,12 +32,7 @@
 
 // data has the structure {source: "", target: "", value: ""}
 
-let links = [
-    {source: "a", target: "b", value: "1"},
-    {source: "b", target: "a", value: "2"},
-    {source: "c", target: "b", value: "3"}
-]
-function drawForceDirectedGraph() {
+function drawForceDirectedGraph(links) {
 
     var nodes = {};
 

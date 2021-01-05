@@ -7,7 +7,6 @@ function drawLegend(legendValues, legendDivElementName) {
         .attr("height", 50+(Object.keys(legendValues).length*25))
         .attr("id", legendDivElementName); // CB -- "line-chart" -- CB //
 
-        console.log(50+(Object.keys(legendValues).length*25))
     let legendSVG = d3v4.select('#' + legendDivElementName)
     // create a list of keys
     let keys = Object.keys(legendValues)

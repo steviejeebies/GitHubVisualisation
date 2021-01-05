@@ -1,9 +1,7 @@
 drawHistogram({ a: "b" })
 
 // https://github.com/search -- test your results against this\
-var outResult
-var repoNumCommits
-let mLParameter
+let outResult = [];
 
 const header = {
     "Accept": "application/vnd.github.v3+json",
@@ -69,8 +67,6 @@ async function usernameInput(event) {
 
     result = await paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header_commit })
 
-    console.log(result);
-
     // Now that we have all the commits, I want to nest them according to repository. This can easily be done 
     // with a D3 function
 
@@ -82,7 +78,7 @@ async function usernameInput(event) {
     // be a clean way to do this other than a for-loop, again relying on D3's nesting function. Once 
     // we have the nesting done, we can create elements to pass to multiLineGraph.js by constructing an 
     // object of the form {count: Number, month: DateString, name:RepoNameString}
-    repoNumCommits = []
+    let repoNumCommits = []
 
     for (let i = 0; i < nestedReposFull.length; i++) {
         repoNumCommits.push(d3v3.nest()
@@ -90,7 +86,7 @@ async function usernameInput(event) {
             .entries(nestedReposFull[i].values))
     }
 
-    mLParameter = []
+    let mLParameter = []
     repoNumCommits.forEach(s => {
         let repoName = s[0].values[0].repository.full_name;
         mLParameter.push({ count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName })
@@ -113,17 +109,27 @@ async function usernameInput(event) {
     // because the graph could become massive otherwise. 
 
     let fdgParameter = []
-    callURL = `users/${username}/following`
 
-    result = paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header })
-    let usersFollowedURLs = []
-    result.forEach(i => {
-        fdgParameter.push({source: username, target: i.login, value: 1})
-        usersFollowedURLs.push(url.concat(`users/${i.login}/following`))
-    })
-    
+    await getFollowing(username, 1)
 
+    // recursive function
+    async function getFollowing(userName, level) {
+        if(level === 0) return;
+        callURL = `users/${userName}/following`;
+        responce = await fetch(url.concat(callURL), { "method": "GET", "headers": header })
+        result = await responce.json()
+        let usersFollowed = []
+        result.forEach(i => {
+            fdgParameter.push({source: username, target: i.login, value: 1})
+            usersFollowed.push(i.login)
+        })
 
+        for(let i = 0; i < usersFollowed.length; i++)
+            await getFollowing(usersFollowed[i], level-1)
+    }
+
+    console.log(fdgParameter)
+    drawForceDirectedGraph(fdgParameter)
 
     // nestedReposFull.items.forEach(i => {
     //     repoNumCommits.push(d3v3.nest()
@@ -203,7 +209,6 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
 
     let responce = await fetch(nextURL, headerMethodObject)
     let result = await responce.json()
-    console.log(result);
     if (result.items === undefined) return results;                          // if only 1 page, we can return this array
     let numResults = (result.total_count > 999 ? 999 : result.total_count)     // limiting, if we're paging for more than 1000 values then this is too much
     let numPages = Math.floor(numResults / result.items.length)       // floor, as we've already gotten the first page
