@@ -112,15 +112,15 @@ async function usernameInput(event) {
     // we find who they are following, and do the same. This is done 3 times only, 
     // because the graph could become massive otherwise. 
 
-    // let fdgParameter = []
-    // callURL = `users/${username}/following`
+    let fdgParameter = []
+    callURL = `users/${username}/following`
 
-    // result = paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header })
-    // let usersFollowedURLs = []
-    // result.forEach(i => {
-    //     fdgParameter.push({source: username, target: i.login, value: 1})
-    //     usersFollowedURLs.push(url.concat(`users/${i.login}/following`))
-    // }
+    result = paginationAllOneArray(url.concat(callURL), { "method": "GET", "headers": header })
+    let usersFollowedURLs = []
+    result.forEach(i => {
+        fdgParameter.push({source: username, target: i.login, value: 1})
+        usersFollowedURLs.push(url.concat(`users/${i.login}/following`))
+    })
     
 
 
@@ -208,7 +208,6 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
     let numResults = (result.total_count > 999 ? 999 : result.total_count)     // limiting, if we're paging for more than 1000 values then this is too much
     let numPages = Math.floor(numResults / result.items.length)       // floor, as we've already gotten the first page
     if (numPages <= 1) return result.items;
-    if(result.total_count > 999) numPages = 11;            // limit, if number of pages are greater than 50
     returnArray.push(...result.items)
 
     let allURLs = []
