@@ -1,0 +1,8 @@
+@import url("piechart.css");
+@import url("multiLineGraph.css");
+@import url("forceDirectedGraph.css");
+
+body {
+    background: url("ENmtT2.jpg") no-repeat;
+    background-size: cover;
+   }
