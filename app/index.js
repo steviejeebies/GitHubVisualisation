@@ -134,11 +134,11 @@ async function usernameInput(event) {
     let mLParameter = []
     repoNumCommits.forEach(s => {
         let repoName = s[0].values[0].repository.full_name;
-        //mLParameter.push({ count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName })
+        mLParameter.push({ count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName })
         s.forEach(t => {
             mLParameter.push({ count: t.values.length, month: t.key, name: t.values[0].repository.full_name })
         })
-        //mLParameter.push({ count: 0, month: getDateBeforeAfter(s[s.length - 1].key, +1), name: repoName })
+        mLParameter.push({ count: 0, month: getDateBeforeAfter(s[s.length - 1].key, +1), name: repoName })
     })
 
     // Now we have the exact structure we need for the multiLineGraph
@@ -217,7 +217,7 @@ async function paginationAllOneArray(passURL, headerMethodObject) {
 
     let responce = await fetch(nextURL, headerMethodObject)
     let result = await responce.json()
-    if (result.items === undefined) return results;                          // if only 1 page, we can return this array
+    if (result.items === undefined) return result;                          // if only 1 page, we can return this array
     let numResults = (result.total_count > 999 ? 999 : result.total_count)     // limiting, if we're paging for more than 1000 values then this is too much
     let numPages = Math.floor(numResults / result.items.length)       // floor, as we've already gotten the first page
     if (numPages <= 1) return result.items;
