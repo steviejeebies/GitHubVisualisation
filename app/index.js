@@ -19,9 +19,18 @@ const header_commit = {
 
 const url = "https://api.github.com/"
 
+function getDateBeforeAfter(string, num) {                     // date has to be in format "2020-03-01"
+    let today = new Date(string)   
+    today.setDate(today.getDate() + num);                     // if num = -1, get num before, if num = 1 get num after
+    return today.toISOString().slice(0, 10);
+}
+
 async function usernameInput(event) {
     // dont want to refresh page
     event.preventDefault(); 
+
+    document.getElementById("multiline_wait").style.visibility = "visible"; 
+    document.getElementById("piechart_radio_buttons").style.visibility = "hidden"; 
 
     d3v4.selectAll("svg").remove();     // for clearing all the currently on-screen graphs
 
@@ -36,6 +45,8 @@ async function usernameInput(event) {
     // first we want to get the JSON for a particular repo
     let responce = await fetch(url.concat(`search/repositories?q=user:${username}`), {"method" : "GET", "headers": header})
     let result = await responce.json()
+
+    console.log(result)
     
     // so now we're making an array for every type of pie chart there is for this call, with an equivalent
     // radio button for it in the HTML
@@ -47,7 +58,7 @@ async function usernameInput(event) {
         user_repos_by_index.push({label: i.name, value: 1})
         user_repos_by_size.push({label: i.name, value: i.size})
     })
-
+    document.getElementById("piechart_radio_buttons").style.visibility = "visible"; 
     drawPieChart(user_repos_by_index)
 
     // Now we want to get all the commits made by the user (accross all repos they've committed to, not
@@ -83,14 +94,19 @@ async function usernameInput(event) {
 
     mLParameter = []
     repoNumCommits.forEach(s => {
+        let repoName = s[0].values[0].repository.full_name;
+        mLParameter.push({count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName})
         s.forEach(t => {
             mLParameter.push({count: t.values.length, month: t.key, name: t.values[0].repository.full_name})
         })
+        mLParameter.push({count: 0, month: getDateBeforeAfter(s[s.length-1].key, +1), name: repoName})
     })
 
     // Now we have the exact structure we need for the multiLineGraph
 
     drawMultiLineGraph(mLParameter);
+
+    document.getElementById("multiline_wait").style.visibility = "hidden"; 
 
     // nestedReposFull.items.forEach(i => {
     //     repoNumCommits.push(d3v3.nest()
@@ -166,6 +182,7 @@ async function paginationAllOneArray (passURL, headerMethodObject) {
     let urlElement = undefined
 
     do {
+        console.log("hello!")
         let responce = await fetch(nextURL, headerMethodObject)
         let result = await responce.json()
         if(result.items === undefined) break;
