@@ -31,6 +31,8 @@
 </head>
 
 <body>
+    <h1>GitHub Visualization</h3>
+    <p>I recommend inputting "steviejeebies" first to start off!</p>
     <form id="inputUsername" class="form-horizontal">
         <div class="field">
             <textarea rows="2" id="usernameInput" placeholder="Input a GitHub Username" required></textarea>
@@ -39,6 +41,14 @@
     </form>
     <div id="userInfo" style="visibility: hidden">
         <div id="piechart_container">
+            <h3>User's Repos Comparison</h3>
+            <h3 id="followers_wait" style="visibility: hidden">Please wait while we get carry out the followers call...
+            </h3>
+            <p>
+                This graph can be used to compare the user's own repos, based on various statistics. By default, all
+                repos are set to a value of 1, giving some room to breathe before you click through the radio buttons
+                for different values.
+            </p>
             <div id="pc_radio_container">
                 <div id="piechart_radio_buttons" style="visibility: hidden">
                     <p>Select:</p>
@@ -53,15 +63,25 @@
                 <div id="piechart_div"></div>
             </div>
         </div>
-        <h3 id="multiline_wait" style="visibility: hidden">Please wait while we get paginated results...</h3>
+        <h3>Following Graph</h3>
+        <h3 id="followers_wait" style="visibility: hidden">Please wait while we get carry out the followers call...</h3>
+        <p>
+            This graph is users that your inputted user is following, and who they are following, currently set to a
+            depth of 2. If the user follows User A and User B, and User A also follows User B, then a connection will
+            also be made between User A and B. Some users that I have tested this graph on have produced massive graphs,
+            so I recommend trying my username "steviejeebies" for a good example of the graph in action.
+        </p>
+        <div id="force_directed_graph_container">
+            <div id="force_directed_graph_div"></div>
+        </div>
+        <h3 id="multiline_wait" style="visibility: hidden">Please wait while we get user commits across all repos...
+        </h3>
+        <h3>User commits over all repos over the course of a year</h3>
         <p>
             This below graph shows all the commits made by a user by repo in the last year, regardless of if the user
             owns the repo or not. Please test out the zooming and scrolling. Please note: If the user has over 1000
             commits in the last year, then this graph will show only the first 1000 received from the API
         </p>
-        <div id="force_directed_graph_container">
-            <div id="force_directed_graph_div"></div>
-        </div>
         <div id="multi_line_graph_container">
             <div id="multi_line_graph_div">
                 <svg id="legend_div" height=300 width=450></svg>
