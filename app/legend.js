@@ -12,6 +12,11 @@ function drawLegend(legendValues, legendDivElementName) {
     let keys = Object.keys(legendValues)
     let colors = Object.values(legendValues)
 
+    legendSVG.append("rect")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("fill", "white");
+
     // Usually you have a color scale in your chart already
     var color = d3v4.scaleOrdinal()
         .domain(keys)

@@ -198,6 +198,11 @@ function drawMultiLineGraph(dataJSON, metricName) {
         .attr("height", height + margin.top + margin.bottom)
         .attr("class", "metric-chart"); // CB -- "line-chart" -- CB //
 
+        vis.append("rect")
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr("fill", "white");
+
     vis.append("defs").append("clipPath")
         .attr("id", "clip")
         .append("rect")

@@ -28,6 +28,7 @@ async function usernameInput(event) {
 
     document.getElementById("userInfo").style.visibility = "visible";
     document.getElementById("multiline_wait").style.visibility = "visible";
+    document.getElementById("followers_wait").style.visibility = "visible";
     document.getElementById("piechart_radio_buttons").style.visibility = "hidden";
 
     d3v4.selectAll("svg").remove();     // for clearing all the currently on-screen graphs
@@ -43,6 +44,10 @@ async function usernameInput(event) {
     // first we want to get the JSON for a particular repo
     let result = await paginationAllOneArray(url.concat(`search/repositories?q=user:${username}`), { "method": "GET", "headers": header })
 
+    // We also have some more values we want to get
+    // (1) num contributors 
+    // (2) num forks
+    // (3) 
     // so now we're making an array for every type of pie chart there is for this call, with an equivalent
     // radio button for it in the HTML
 
@@ -85,6 +90,8 @@ async function usernameInput(event) {
     console.log(fdgParameter)
     drawForceDirectedGraph(fdgParameter, nodesParameter)
 
+    document.getElementById("followers_wait").style.visibility = "hidden";
+
     // Now we want to get all the commits made by the user (accross all repos they've committed to, not
     // just their own). I'm only interested in commits made in the last year
 
@@ -118,11 +125,11 @@ async function usernameInput(event) {
     let mLParameter = []
     repoNumCommits.forEach(s => {
         let repoName = s[0].values[0].repository.full_name;
-        mLParameter.push({ count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName })
+        //mLParameter.push({ count: 0, month: getDateBeforeAfter(s[0].key, -1), name: repoName })
         s.forEach(t => {
             mLParameter.push({ count: t.values.length, month: t.key, name: t.values[0].repository.full_name })
         })
-        mLParameter.push({ count: 0, month: getDateBeforeAfter(s[s.length - 1].key, +1), name: repoName })
+        //mLParameter.push({ count: 0, month: getDateBeforeAfter(s[s.length - 1].key, +1), name: repoName })
     })
 
     // Now we have the exact structure we need for the multiLineGraph
