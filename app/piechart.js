@@ -61,6 +61,12 @@ function drawPieChart(dataJSON) {
 			  return user_repos_by_index;
 			case "user_repos_by_size":
 			  return user_repos_by_size;
+			case "user_repos_by_forks":
+			  return user_repos_by_forks;
+			case "user_repos_by_watchers":
+			  return user_repos_by_watchers;
+			case "user_repos_by_open_issues":
+			  return user_repos_by_open_issues;
 			default:
 			  return []
 		} 

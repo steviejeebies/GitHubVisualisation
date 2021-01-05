@@ -45,18 +45,27 @@ async function usernameInput(event) {
     let result = await paginationAllOneArray(url.concat(`search/repositories?q=user:${username}`), { "method": "GET", "headers": header })
 
     // We also have some more values we want to get
-    // (1) num contributors 
-    // (2) num forks
+    // (1) num forks
+    // (2) num watchers
+    // (3) num open issues
+    // () num contributors 
+    
     // (3) 
     // so now we're making an array for every type of pie chart there is for this call, with an equivalent
     // radio button for it in the HTML
 
     user_repos_by_index = []        // all of the values for this will just be 1, so that the pie chart starts out with each slice equal
     user_repos_by_size = []
+    user_repos_by_forks = []
+    user_repos_by_watchers = []
+    user_repos_by_open_issues = []
 
     result.forEach(i => {
         user_repos_by_index.push({ label: i.name, value: 1 })
         user_repos_by_size.push({ label: i.name, value: i.size })
+        user_repos_by_forks.push({ label: i.name, value:  i.forks_count })
+        user_repos_by_watchers.push({ label: i.name, value: i.watchers_count })
+        user_repos_by_open_issues.push({ label: i.name, value: i.open_issues_count })
     })
     document.getElementById("piechart_radio_buttons").style.visibility = "visible";
     drawPieChart(user_repos_by_index)

@@ -46,7 +46,9 @@
             <p>
                 This graph can be used to compare the user's own repos, based on various statistics. By default, all
                 repos are set to a value of 1, giving some room to breathe before you click through the radio buttons
-                for different values.
+                for different values. <b>If all the repos have a value of 0 for the option you've selected, then the pie chart
+                    will completely disappear, this is normal!
+                </b> The user 'OneLoneCoder' is a good example of showing off this graph in particular.
             </p>
             <div id="pc_radio_container">
                 <div id="piechart_radio_buttons" style="visibility: hidden">
@@ -57,6 +59,12 @@
                         <label for="index">All Slices Equal</label>
                         <input type="radio" id="size" name="pie_chart_radio" value="user_repos_by_size">
                         <label for="size">Size</label>
+                        <input type="radio" id="forks" name="pie_chart_radio" value="user_repos_by_forks">
+                        <label for="forks">Num. Forks</label>
+                        <input type="radio" id="watchers" name="pie_chart_radio" value="user_repos_by_watchers">
+                        <label for="watchers">Num. Wachers</label>
+                        <input type="radio" id="index" name="pie_chart_radio" value="user_repos_by_open_issues">
+                        <label for="index">Num. Open Issues</label>
                     </div>
                 </div>
                 <div id="piechart_div"></div>
