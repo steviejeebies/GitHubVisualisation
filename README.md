@@ -1,7 +1,5 @@
 # GitHub Visualization Project
 
-This is my submission for the Visualization Project. 
-
 ## Token
 
 The only requirement is to add a `token.js` file in the top level directory (ignored by my .gitignore). In this file, add the following:
