@@ -1,5 +1,7 @@
 # GitHub Visualization Project
 
+This project was intended to month-long task, but due some factors completely out of my control, was done within 2 days and in a language I hadn't used before this, hence the slap-dash nature of the code/UI. 
+
 ## Token
 
 The only requirement is to add a `token.js` file in the top level directory (ignored by my .gitignore). In this file, add the following:
